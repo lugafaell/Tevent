@@ -1,0 +1,66 @@
+.main-content-calendar {
+    flex: 1;
+    background-color: #ffffff;
+    margin: 10px 10px 0 10px;
+    border-radius: 8px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    height: 80px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-left h1 {
+    font-size: 24px;
+    color: #333;
+    margin: 0;
+}
+
+.calendar-icon {
+    color: #6b46c1;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.current-date {
+    font-size: 18px;
+    font-weight: 500;
+    color: #4a5568;
+    min-width: 200px;
+    text-align: center;
+}
+
+.nav-button {
+    background: none;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4a5568;
+    transition: all 0.2s;
+}
+
+.nav-button:hover {
+    background-color: #f7fafc;
+    color: #2d3748;
+}
+
+.nav-button:active {
+    background-color: #edf2f7;
+}

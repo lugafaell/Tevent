@@ -1,0 +1,129 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: #666;
+  }
+  
+  .close-button:hover {
+    color: #333;
+  }
+  
+  h2 {
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  .invite-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .invite-card h3 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+  }
+  
+  .invite-card p {
+    margin: 0.5rem 0;
+    color: #666;
+    display: flex;
+    align-items: center;
+  }
+  
+  .description {
+    font-size: 0.9rem;
+    color: #777;
+    margin: 0.5rem 0;
+  }
+  
+  .organizer {
+    font-size: 0.9rem;
+    color: #555;
+    font-style: italic;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    justify-content: flex-end;
+  }
+  
+  .accept-button, .reject-button {
+    border: none;
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+  }
+  
+  .accept-button {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .reject-button {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .accept-button:hover, .reject-button:hover {
+    transform: scale(1.1);
+  }
+  
+  .loading {
+    text-align: center;
+    color: #666;
+  }
+  
+  .error {
+    color: #f44336;
+    text-align: center;
+    padding: 1rem;
+    background-color: #ffebee;
+    border-radius: 4px;
+  }
+  
+  .no-invites {
+    text-align: center;
+    color: #666;
+    padding: 2rem;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+  }
