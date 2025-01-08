@@ -35,7 +35,7 @@ export function RecoverPasswordForm({ onBack }: { onBack: () => void }) {
         const dataNascimentoISO = `${ano}-${mes}-${dia}`;
 
         try {
-            await axios.post("http://localhost:3000/api/usuarios/recuperar", {
+            await axios.post("https://api.itmf.app.br/api/usuarios/recuperar", {
                 cpf,
                 dataNascimento: dataNascimentoISO,
                 novaSenha,

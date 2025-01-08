@@ -24,7 +24,7 @@ const EventList: React.FC = () => {
                     .find(row => row.startsWith('userId='))
                     ?.split('=')[1];
 
-                const response = await fetch(`http://localhost:3000/api/eventos/publicos/${userId}`);
+                const response = await fetch(`https://api.itmf.app.br/api/eventos/publicos/${userId}`);
                 const data = await response.json();
                 setEvents(data);
             } catch (error) {
@@ -56,7 +56,7 @@ const EventList: React.FC = () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:3000/api/eventos/${eventoId}/participar`, {
+            const response = await fetch(`https://api.itmf.app.br/api/eventos/${eventoId}/participar`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

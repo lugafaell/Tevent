@@ -41,7 +41,7 @@ const UserSection: React.FC = () => {
        const fetchUser = async () => {
            try {
                const userId = Cookies.get('userId');
-               const response = await axios.get(`http://localhost:3000/api/usuarios/${userId}`);
+               const response = await axios.get(`https://api.itmf.app.br/api/usuarios/${userId}`);
                setUserData(response.data);
                setFormData({
                    nome: response.data.nome,
@@ -85,7 +85,7 @@ const UserSection: React.FC = () => {
    const handleUpdateUser = async () => {
     try {
         const userId = Cookies.get('userId');
-        await axios.put(`http://localhost:3000/api/usuarios/${userId}`, formData);
+        await axios.put(`https://api.itmf.app.br/api/usuarios/${userId}`, formData);
         setUserData(prev => prev ? { ...prev, ...formData } : null);
         setAlert({
             show: true,
@@ -105,7 +105,7 @@ const UserSection: React.FC = () => {
 const handleUpdatePassword = async () => {
     try {
         const userId = Cookies.get('userId');
-        await axios.put(`http://localhost:3000/api/usuarios/${userId}`, passwordData);
+        await axios.put(`https://api.itmf.app.br/api/usuarios/${userId}`, passwordData);
         setIsEditingPassword(false);
         setPasswordData({ senhaAntiga: '', senhaNova: '' });
         setAlert({

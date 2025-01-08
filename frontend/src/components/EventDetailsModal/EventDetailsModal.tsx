@@ -46,7 +46,7 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
     const fetchAvailableUsers = async () => {
         try {
             const response = await axios.get(
-                `http://localhost:3000/api/eventos/${event.id}/usuarios-disponiveis/${userId}`
+                `https://api.itmf.app.br/api/eventos/${event.id}/usuarios-disponiveis/${userId}`
             );
             setAvailableUsers(response.data);
         } catch (error) {
@@ -78,7 +78,7 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
         };
 
         try {
-            const response = await axios.post('http://localhost:3000/api/enviar', inviteData);
+            const response = await axios.post('https://api.itmf.app.br/api/enviar', inviteData);
             if (response.status === 200) {
                 setAlert({
                     show: true,
@@ -109,7 +109,7 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
     const handleDelete = async () => {
         try {
             const response = await axios.delete(
-                `http://localhost:3000/api/eventos/${event.id}`
+                `https://api.itmf.app.br/api/eventos/${event.id}`
             );
 
             if (response.status === 200) {
@@ -129,7 +129,7 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
     const handleRemoveParticipation = async () => {
         try {
             const response = await axios.post(
-                `http://localhost:3000/api/eventos/${event.id}/remover-participacao`,
+                `https://api.itmf.app.br/api/eventos/${event.id}/remover-participacao`,
                 { userId }
             );
 
@@ -165,7 +165,7 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
             };
 
             const response = await axios.put(
-                `http://localhost:3000/api/eventos/${updatedEvent.id}`,
+                `https://api.itmf.app.br/api/eventos/${updatedEvent.id}`,
                 eventData
             );
 

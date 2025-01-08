@@ -16,7 +16,7 @@ const InviteModal: React.FC<InviteModalProps> = ({ isOpen, onClose }) => {
 
   const fetchUsuarios = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/usuarios');
+      const response = await fetch('https://api.itmf.app.br/api/usuarios');
       if (!response.ok) {
         throw new Error('Erro ao carregar usuários');
       }
@@ -36,7 +36,7 @@ const InviteModal: React.FC<InviteModalProps> = ({ isOpen, onClose }) => {
 
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3000/api/recebidos?usuarioId=${userId}`);
+      const response = await fetch(`https://api.itmf.app.br/api/recebidos?usuarioId=${userId}`);
       if (!response.ok) {
         throw new Error('Erro ao carregar convites');
       }
@@ -58,7 +58,7 @@ const InviteModal: React.FC<InviteModalProps> = ({ isOpen, onClose }) => {
 
   const handleResponderConvite = async (conviteId: number, resposta: 'aceitar' | 'recusar') => {
     try {
-      const response = await fetch('http://localhost:3000/api/responder', {
+      const response = await fetch('https://api.itmf.app.br/api/responder', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -58,7 +58,7 @@ const EventModal: React.FC<EventModalProps> = ({
 
     try {
       await axios.post(
-        `http://localhost:3000/api/usuarios/${userId}/eventos`,
+        `https://api.itmf.app.br/api/usuarios/${userId}/eventos`,
         {
           nome: eventName,
           descricao: description,

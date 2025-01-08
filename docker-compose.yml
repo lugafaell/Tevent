@@ -13,6 +13,7 @@ services:
     depends_on:
       - database
     restart: unless-stopped
+    command: [ "./wait-for-it.sh", "database:5432", "--", "npm", "start" ]
 
   frontend:
     build:
@@ -42,9 +43,9 @@ services:
     image: jc21/nginx-proxy-manager:latest
     container_name: nginx-proxy-manager
     ports:
-      - "80:80"   
-      - "81:81"    
-      - "443:443"  
+      - "80:80"
+      - "81:81"
+      - "443:443"
     volumes:
       - nginx-data:/data
       - nginx-letsencrypt:/etc/letsencrypt
