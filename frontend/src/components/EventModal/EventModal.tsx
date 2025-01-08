@@ -58,7 +58,7 @@ const EventModal: React.FC<EventModalProps> = ({
 
     try {
       await axios.post(
-        `https://api.itmf.app.br/api/usuarios/${userId}/eventos`,
+        `http://api.localhost/api/usuarios/${userId}/eventos`,
         {
           nome: eventName,
           descricao: description,
@@ -137,13 +137,14 @@ const EventModal: React.FC<EventModalProps> = ({
             </label>
           </div>
           <div className="public-toggle">
-            <label>
-              Evento Público
+            <span className="public-toggle-label">Evento Público</span>
+            <label className="toggle-switch">
               <input
                 type="checkbox"
                 checked={isPublic}
                 onChange={() => setIsPublic(!isPublic)}
               />
+              <span className="toggle-slider"></span>
             </label>
           </div>
           {error && <p className="error-message">{error}</p>}

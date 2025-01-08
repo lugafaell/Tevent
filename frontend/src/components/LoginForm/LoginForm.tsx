@@ -20,7 +20,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
     setError(null);
 
     try {
-      const response = await axios.post("https://api.itmf.app.br/api/usuarios/login", {
+      const response = await axios.post("http://api.localhost/api/usuarios/login", {
         cpf,
         senha,
       });

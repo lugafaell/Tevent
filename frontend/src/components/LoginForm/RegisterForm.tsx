@@ -81,7 +81,7 @@ export function RegisterForm({ onBack }: { onBack: () => void }) {
         const dataNascimentoISO = `${ano}-${mes}-${dia}`;
 
         try {
-            const response = await axios.post("https://api.itmf.app.br/api/usuarios", {
+            const response = await axios.post("http://api.localhost/api/usuarios", {
                 nome,
                 cpf,
                 dataNascimento: dataNascimentoISO,

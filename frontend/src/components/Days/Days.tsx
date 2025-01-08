@@ -29,7 +29,7 @@ const Days: React.FC<DaysProps> = ({ currentMonth, currentYear }) => {
         if (userId) {
             try {
                 const response = await axios.get(
-                    `https://api.itmf.app.br/api/usuarios/${userId}/eventos`
+                    `http://api.localhost/api/usuarios/${userId}/eventos`
                 );
                 setEvents(response.data);
             } catch (error) {

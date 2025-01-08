@@ -41,7 +41,7 @@ const UserSection: React.FC = () => {
        const fetchUser = async () => {
            try {
                const userId = Cookies.get('userId');
-               const response = await axios.get(`https://api.itmf.app.br/api/usuarios/${userId}`);
+               const response = await axios.get(`http://api.localhost/api/usuarios/${userId}`);
                setUserData(response.data);
                setFormData({
                    nome: response.data.nome,

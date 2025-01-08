@@ -28,7 +28,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeComponent }) => {
         if (!userId) {
           throw new Error('Usuário não autenticado');
         }
-        const response = await axios.get(`https://api.itmf.app.br/api/usuarios/${userId}`);
+        const response = await axios.get(`http://api.localhost/api/usuarios/${userId}`);
         setUserName(response.data.nome);
       } catch (error) {
         console.error('Erro ao buscar usuário:', error);

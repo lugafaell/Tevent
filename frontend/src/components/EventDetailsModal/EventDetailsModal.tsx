@@ -46,7 +46,7 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
     const fetchAvailableUsers = async () => {
         try {
             const response = await axios.get(
-                `https://api.itmf.app.br/api/eventos/${event.id}/usuarios-disponiveis/${userId}`
+                `http://api.localhost/api/eventos/${event.id}/usuarios-disponiveis/${userId}`
             );
             setAvailableUsers(response.data);
         } catch (error) {
@@ -78,7 +78,7 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
         };
 
         try {
-            const response = await axios.post('https://api.itmf.app.br/api/enviar', inviteData);
+            const response = await axios.post('http://api.localhost/api/enviar', inviteData);
             if (response.status === 200) {
                 setAlert({
                     show: true,
@@ -109,7 +109,7 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
     const handleDelete = async () => {
         try {
             const response = await axios.delete(
-                `https://api.itmf.app.br/api/eventos/${event.id}`
+                `http://api.localhost/api/eventos/${event.id}`
             );
 
             if (response.status === 200) {
@@ -129,7 +129,7 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
     const handleRemoveParticipation = async () => {
         try {
             const response = await axios.post(
-                `https://api.itmf.app.br/api/eventos/${event.id}/remover-participacao`,
+                `http://api.localhost/api/eventos/${event.id}/remover-participacao`,
                 { userId }
             );
 
@@ -165,18 +165,13 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
             };
 
             const response = await axios.put(
-                `https://api.itmf.app.br/api/eventos/${updatedEvent.id}`,
+                `http://api.localhost/api/eventos/${updatedEvent.id}`,
                 eventData
             );
 
             if (response.status === 200) {
                 onEventUpdate(response.data);
                 setIsEditModalOpen(false);
-                setAlert({
-                    show: true,
-                    message: 'Evento atualizado com sucesso!',
-                    type: 'success'
-                });
             }
         } catch (error) {
             console.error('Erro ao atualizar evento:', error);
