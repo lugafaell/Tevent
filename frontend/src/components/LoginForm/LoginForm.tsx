@@ -4,10 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../contexts/AuthContext';
 import "./LoginForm.css";
 
-export function LoginForm() {
+interface LoginFormProps {
+  onForgotPassword: () => void;
+}
+
+export function LoginForm({ onForgotPassword }: LoginFormProps) {
   const [cpf, setCpf] = useState("");
   const [senha, setSenha] = useState("");
-  //const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -23,7 +26,7 @@ export function LoginForm() {
       });
 
       const userId = response.data.usuario;
-      login(userId); // Usa a função do contexto
+      login(userId); 
       navigate("/Home", { replace: true });
 
     } catch (err) {
@@ -70,7 +73,12 @@ export function LoginForm() {
       <div className="form-footer">
         <div>
         </div>
-        <a href="#">Esqueceu sua senha?</a>
+        <a href="#" onClick={(e) => {
+          e.preventDefault();
+          onForgotPassword();
+        }}>
+          Esqueceu sua senha?
+        </a>
       </div>
 
       {error && <p className="error-message">{error}</p>}

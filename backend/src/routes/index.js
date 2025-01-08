@@ -11,6 +11,7 @@ router.get('/usuarios/:id', usuarioController.buscarUsuarioPorId);
 router.put('/usuarios/:id', usuarioController.atualizarUsuario);
 router.delete('/usuarios/:id', usuarioController.excluirUsuario);
 router.post('/usuarios/login', usuarioController.loginUsuario);
+router.post('/usuarios/recuperar', usuarioController.recuperarSenha);
 
 router.post('/usuarios/:usuarioId/eventos', eventoController.criarEvento);
 router.get('/usuarios/:usuarioId/eventos', eventoController.listarEventosPorUsuario);

@@ -7,16 +7,6 @@ const criarEvento = async (req, res) => {
     const { usuarioId } = req.params;
     const { nome, descricao, dataEvento, horaInicio, horaTermino, isPublic, guests } = req.body;
 
-    console.log({
-      nome,
-      descricao,
-      dataEvento,
-      horaInicio,
-      horaTermino,
-      isPublic,
-      guests,
-    });
-
     const usuario = await Usuario.findByPk(usuarioId);
     if (!usuario) {
       return res.status(404).json({ erro: 'Usuário não encontrado' });
@@ -71,6 +61,26 @@ const participarEvento = async (req, res) => {
       return res.status(404).json({ error: 'Evento não encontrado' });
     }
 
+    const dataEvento = evento.dataEvento;
+
+    const eventosDoUsuario = await Evento.findAll({
+      where: {
+        [Op.and]: [
+          { dataEvento },
+          {
+            [Op.or]: [
+              { usuarioId: userId },
+              Sequelize.literal(`"${Evento.name}".guests @> ARRAY[${userId}]::integer[]`)
+            ],
+          },
+        ],
+      },
+    });
+
+    if (eventosDoUsuario.length > 0) {
+      return res.status(400).json({ error: 'Você já tem um evento no mesmo dia.' });
+    }
+
     const guests = Array.isArray(evento.guests) ? [...evento.guests] : [];
 
     if (guests.includes(userId)) {
@@ -106,7 +116,6 @@ const removerParticipacao = async (req, res) => {
       return res.status(404).json({ error: 'Evento não encontrado' });
     }
 
-    // Atualiza o array guests removendo o userId
     const updatedGuests = evento.guests?.filter((id) => id !== userId) || [];
 
     await Evento.update(

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './EditEventModal.css';
 import { Event, EditEventModalProps } from '../../types/event';
 
@@ -9,6 +9,15 @@ const EditEventModal: React.FC<EditEventModalProps> = ({ isOpen, onClose, event,
     const [horaInicio, setHoraInicio] = useState(event.horaInicio);
     const [horaTermino, setHoraTermino] = useState(event.horaTermino);
     const [isPublic, setIsPublic] = useState(event.isPublic);
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        if (isOpen) {
+            setIsVisible(true);
+        } else {
+            setIsVisible(false);
+          }
+    }, [isOpen]);
 
     const handleSave = () => {
         const updatedEvent: Event = {
@@ -26,17 +35,17 @@ const EditEventModal: React.FC<EditEventModalProps> = ({ isOpen, onClose, event,
         onClose();
     };
 
-    if (!isOpen) return null;
+    if (!isOpen && !isVisible) return null;
 
     return (
-        <div className="edit-event-modal">
-            <div className="modal-content">
+        <div className={`edit-event-modal ${isVisible ? 'visible' : ''}`}>
+            <div className={`modal-content ${isVisible ? 'visible' : ''}`}>
                 <button className="close-button" onClick={onClose}>
                     &times;
                 </button>
                 <h2>Editar Evento</h2>
                 <p>Faça as alterações necessárias no seu evento aqui. Clique em salvar quando terminar.</p>
-                <form>
+                <form className='form-edit'>
                     <label>
                         Título
                         <input

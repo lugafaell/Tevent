@@ -14,6 +14,8 @@ export interface Event {
 export interface User {
     id: number;
     nome: string;
+    cpf: string;
+    dataNascimento: string;
 }
 
 export interface Invite {
@@ -45,5 +47,13 @@ export interface DaysProps {
 
 export interface InviteModalProps {
     isOpen: boolean;
+    onClose: () => void;
+}
+
+export type AlertType = 'info' | 'success' | 'warn' | 'error';
+
+export interface CustomAlertProps {
+    message: string;
+    type: AlertType;
     onClose: () => void;
 }

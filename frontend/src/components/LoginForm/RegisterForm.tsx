@@ -3,7 +3,7 @@ import axios, { AxiosError } from "axios";
 import "./LoginForm.css";
 import InputMask from "react-input-mask";
 
-export function RegisterForm() {
+export function RegisterForm({ onBack }: { onBack: () => void }) {
     const [nome, setNome] = useState("");
     const [cpf, setCpf] = useState("");
     const [dataNascimento, setDataNascimento] = useState("");
@@ -89,6 +89,7 @@ export function RegisterForm() {
             });
 
             console.log("Registro bem-sucedido:", response.data);
+            onBack();
         } catch (err) {
             const axiosError = err as AxiosError<{ message: string }>;
             if (axiosError.response) {

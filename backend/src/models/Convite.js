@@ -34,12 +34,11 @@ const Convite = sequelize.define('Convite', {
   timestamps: true,
 });
 
-// Relacionamentos
 Convite.belongsTo(Usuario, { foreignKey: 'remetenteId', as: 'remetente' });
-Convite.belongsTo(Evento, { foreignKey: 'eventoId', as: 'evento' });
+Convite.belongsTo(Evento, { foreignKey: 'eventoId', as: 'evento', onDelete: 'CASCADE' });
 Convite.belongsTo(Usuario, { foreignKey: 'convidadoId', as: 'convidado' });
 
-Evento.hasMany(Convite, { foreignKey: 'eventoId', as: 'convites' });
+Evento.hasMany(Convite, { foreignKey: 'eventoId', as: 'convites', onDelete: 'CASCADE' });
 Usuario.hasMany(Convite, { foreignKey: 'convidadoId', as: 'convitesRecebidos' });
 Usuario.hasMany(Convite, { foreignKey: 'remetenteId', as: 'convitesEnviados' });
 

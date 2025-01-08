@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const routes = require('./routes');
 const sequelize = require('./config/database');
+const cleanupOldEvents = require('./jobs/cleanupEvents');
 
 const app = express();
 
@@ -20,5 +21,7 @@ app.use('/api', routes);
     console.error('Erro ao conectar ou sincronizar o banco de dados:', error);
   }
 })();
+
+cleanupOldEvents();
 
 module.exports = app;

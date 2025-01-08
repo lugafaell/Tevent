@@ -4,9 +4,17 @@ import { CalendarIcon, ClockIcon } from '@radix-ui/react-icons';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Event } from '../../types/event';
+import CustomAlert from '../CustomAlert/CustomAlert';
+
+type AlertConfig = {
+    show: boolean;
+    message: string;
+    type: 'info' | 'success' | 'warn' | 'error';
+};
 
 const EventList: React.FC = () => {
     const [events, setEvents] = useState<Event[]>([]);
+    const [alert, setAlert] = useState<AlertConfig | null>(null);
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -21,6 +29,11 @@ const EventList: React.FC = () => {
                 setEvents(data);
             } catch (error) {
                 console.error('Erro ao buscar eventos:', error);
+                setAlert({
+                    show: true,
+                    message: 'Erro ao carregar eventos. Tente novamente mais tarde.',
+                    type: 'error'
+                });
             }
         };
 
@@ -34,7 +47,11 @@ const EventList: React.FC = () => {
             ?.split('=')[1];
 
         if (!userId) {
-            console.error('Usuário não autenticado.');
+            setAlert({
+                show: true,
+                message: 'Usuário não autenticado. Faça login para participar.',
+                type: 'warn'
+            });
             return;
         }
 
@@ -49,15 +66,27 @@ const EventList: React.FC = () => {
 
             if (response.ok) {
                 setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventoId));
-                alert('Você agora está participando deste evento!');
+                setAlert({
+                    show: true,
+                    message: 'Você agora está participando deste evento!',
+                    type: 'success'
+                });
             } else {
                 const errorData = await response.json();
                 console.error('Erro ao participar do evento:', errorData);
-                alert(errorData.error || 'Erro ao participar do evento.');
+                setAlert({
+                    show: true,
+                    message: errorData.error || 'Erro ao participar do evento.',
+                    type: 'error'
+                });
             }
         } catch (error) {
             console.error('Erro ao enviar solicitação:', error);
-            alert('Erro ao participar do evento.');
+            setAlert({
+                show: true,
+                message: 'Erro ao participar do evento.',
+                type: 'error'
+            });
         }
     };
 
@@ -71,6 +100,13 @@ const EventList: React.FC = () => {
 
     return (
         <div className="event-list-container-new">
+            {alert?.show && (
+                <CustomAlert
+                    message={alert.message}
+                    type={alert.type}
+                    onClose={() => setAlert(null)}
+                />
+            )}
             <h1 className="event-list-title-new">Eventos</h1>
             <div className="events-grid-new">
                 {events.map((event, index) => (

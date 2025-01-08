@@ -14,6 +14,16 @@ const Days: React.FC<DaysProps> = ({ currentMonth, currentYear }) => {
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
     const [events, setEvents] = useState<Event[]>([]);
 
+    const getDaysInMonth = (month: number, year: number) => {
+        return new Date(year, month + 1, 0).getDate();
+    };
+
+    const isPastDate = (day: number) => {
+        const today = new Date();
+        const checkDate = new Date(currentYear, currentMonth, day);
+        return checkDate < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    };
+
     const fetchEvents = async () => {
         const userId = Cookies.get('userId');
         if (userId) {
@@ -32,10 +42,14 @@ const Days: React.FC<DaysProps> = ({ currentMonth, currentYear }) => {
         fetchEvents();
     }, []);
 
-
-    const days = Array.from({ length: 30 }, (_, index) => index + 1);
+    const days = Array.from(
+        { length: getDaysInMonth(currentMonth, currentYear) }, 
+        (_, index) => index + 1
+    );
 
     const handleDayClick = (day: number) => {
+        if (isPastDate(day)) return; 
+
         const formattedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         setSelectedDate(formattedDate);
 
@@ -59,15 +73,16 @@ const Days: React.FC<DaysProps> = ({ currentMonth, currentYear }) => {
                 <div className="days-grid">
                     {days.map((day, index) => {
                         const event = getEventForDay(day);
+                        const isPast = isPastDate(day);
                         return (
                             <div
                                 key={day}
-                                className="day-cell"
+                                className={`day-cell ${isPast ? 'past-date' : ''}`}
                                 style={{ '--animation-delay': `${index * 0.05}s` } as React.CSSProperties}
-                                onClick={() => handleDayClick(day)}
+                                onClick={() => !isPast && handleDayClick(day)}
                             >
                                 {event ? (
-                                    <div className="event-card">
+                                    <div className={`event-card ${isPast ? 'past-event' : ''}`}>
                                         <h3 className="event-title">{event.nome}</h3>
                                         <div className="event-details-days">
                                             <div className="event-date">
@@ -94,9 +109,11 @@ const Days: React.FC<DaysProps> = ({ currentMonth, currentYear }) => {
                                 ) : (
                                     <>
                                         <div className="day-number">{day}</div>
-                                        <div className="plus-icon-new">
-                                            <Plus size={20} strokeWidth={3} />
-                                        </div>
+                                        {!isPast && (
+                                            <div className="plus-icon-new">
+                                                <Plus size={20} strokeWidth={3} />
+                                            </div>
+                                        )}
                                     </>
                                 )}
                             </div>
@@ -120,8 +137,8 @@ const Days: React.FC<DaysProps> = ({ currentMonth, currentYear }) => {
                         setIsDetailsModalOpen(false);
                     }}
                     onEventUpdate={() => {
-                        fetchEvents();  // Recarrega todos os eventos após atualização
-                        setIsDetailsModalOpen(false);  // Fecha o modal
+                        fetchEvents();
+                        setIsDetailsModalOpen(false);
                     }}
                 />
             )}

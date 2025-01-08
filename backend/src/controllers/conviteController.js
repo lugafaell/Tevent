@@ -1,4 +1,4 @@
-const { Op } = require('sequelize');
+const { Op, Sequelize } = require('sequelize');
 const Convite = require('../models/Convite');
 const Usuario = require('../models/Usuario');
 const Evento = require('../models/Evento');
@@ -65,38 +65,61 @@ class ConviteController {
 
   async responderConvite(req, res) {
     const { conviteId, resposta } = req.body;
+  
     try {
       const convite = await Convite.findOne({
-        where: { id: conviteId }
+        where: { id: conviteId },
       });
-
+  
       if (!convite) {
         return res.status(404).json({ error: 'Convite não encontrado' });
       }
-
+  
       const evento = await Evento.findByPk(convite.eventoId);
       if (!evento) {
         return res.status(404).json({ error: 'Evento não encontrado' });
       }
-
+  
       if (resposta === 'aceitar') {
+        const convidadoId = convite.convidadoId;
+        const dataEvento = evento.dataEvento;
+  
+        const eventosConflitantes = await Evento.findAll({
+          where: {
+            [Op.and]: [
+              { dataEvento },
+              {
+                [Op.or]: [
+                  { usuarioId: convidadoId },
+                  Sequelize.literal(`"${Evento.name}".guests @> ARRAY[${convidadoId}]::integer[]`),
+                ],
+              },
+            ],
+          },
+        });
+  
+        if (eventosConflitantes.length > 0) {
+          return res.status(400).json({
+            error: 'Você já possui um evento no mesmo dia.',
+          });
+        }
+  
         const guests = Array.isArray(evento.guests) ? [...evento.guests] : [];
-
-        if (!guests.includes(convite.convidadoId)) {
-          guests.push(convite.convidadoId);
-
+        if (!guests.includes(convidadoId)) {
+          guests.push(convidadoId);
+  
           await Evento.update(
             { guests },
             { where: { id: evento.id } }
           );
         }
       }
-
+  
       await convite.destroy();
-
+  
       return res.json({
         message: 'Convite processado com sucesso',
-        status: resposta
+        status: resposta,
       });
     } catch (error) {
       console.error('Erro ao responder convite:', error);

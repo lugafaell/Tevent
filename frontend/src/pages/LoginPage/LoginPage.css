@@ -9,6 +9,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
 
 .login-page .form-container {
@@ -125,11 +126,120 @@
 }
 
 @keyframes cursor {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 
 @keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
+  from {
+    width: 0
+  }
+
+  to {
+    width: 100%
+  }
+}
+
+@media (max-width: 768px) {
+  .login-page {
+    flex-direction: column;
+  }
+
+  .background-image {
+    order: -1;
+    padding: 1rem 1rem 0;
+    background-color: #463884;
+    flex: initial;
+    height: auto;
+    border-radius: 0 0 20px 20px;
+    margin-top: 110px;
+  }
+
+  .background-image img {
+    max-width: 40%;
+    margin-bottom: 0;
+    z-index: 1000;
+
+  }
+
+  .text-container {
+    gap: 0.25rem;
+  }
+
+  .brand-name {
+    display: none;
+  }
+
+  .typing-container {
+    display: none;
+  }
+
+  .login-page{
+    background-color: #463884;
+  }
+
+  .login-page .left-column {
+    padding: 0 16px;
+    margin-top: -190px;
+    background-color: #463884;
+  }
+
+  .login-page .form-container {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .login-page h2 {
+    font-size: 22px;
+    text-align: center;
+    margin-top: 0.5rem;
+    color: white;
+  }
+
+  .login-page p {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  .login-page a {
+    color: white;
+  }
+
+  .login-form input {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .login-form button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 320px) {
+  .login-page h2 {
+    font-size: 20px;
+  }
+
+  .login-page .form-container {
+    padding: 10px;
+  }
+
+  .background-image img {
+    max-width: 50%;
+  }
+
+  .brand-name {
+    font-size: 1.75rem;
+  }
 }

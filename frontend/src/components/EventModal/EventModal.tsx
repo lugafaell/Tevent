@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import "./EventModal.css";
@@ -11,11 +11,11 @@ interface EventModalProps {
   onSuccess: () => void;
 }
 
-const EventModal: React.FC<EventModalProps> = ({ 
-  isOpen, 
-  onClose, 
+const EventModal: React.FC<EventModalProps> = ({
+  isOpen,
+  onClose,
   selectedDate,
-  onSuccess 
+  onSuccess
 }) => {
   const [eventName, setEventName] = useState("");
   const [description, setDescription] = useState("");
@@ -24,6 +24,15 @@ const EventModal: React.FC<EventModalProps> = ({
   const [isPublic, setIsPublic] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -33,55 +42,55 @@ const EventModal: React.FC<EventModalProps> = ({
 
     const userId = Cookies.get("userId");
     if (!userId) {
-        setError("Usuário não autenticado.");
-        return;
+      setError("Usuário não autenticado.");
+      return;
     }
 
     let formattedDate;
     try {
-        const [year, month, day] = selectedDate.split("-");
-        formattedDate = format(new Date(Number(year), Number(month) - 1, Number(day)), "yyyy-MM-dd");
+      const [year, month, day] = selectedDate.split("-");
+      formattedDate = format(new Date(Number(year), Number(month) - 1, Number(day)), "yyyy-MM-dd");
     } catch (error) {
-        console.error("Erro ao formatar a data:", error);
-        setError("Erro ao processar a data do evento. Tente novamente.");
-        return;
+      console.error("Erro ao formatar a data:", error);
+      setError("Erro ao processar a data do evento. Tente novamente.");
+      return;
     }
 
     try {
-        await axios.post(
-            `http://localhost:3000/api/usuarios/${userId}/eventos`,
-            {
-                nome: eventName,
-                descricao: description,
-                dataEvento: formattedDate,
-                horaInicio: startTime,
-                horaTermino: endTime,
-                isPublic,
-            }
-        );
-    
-        setSuccessMessage("Evento registrado com sucesso!");
-        setEventName("");
-        setDescription("");
-        setStartTime("");
-        setEndTime("");
-        setIsPublic(false);
+      await axios.post(
+        `http://localhost:3000/api/usuarios/${userId}/eventos`,
+        {
+          nome: eventName,
+          descricao: description,
+          dataEvento: formattedDate,
+          horaInicio: startTime,
+          horaTermino: endTime,
+          isPublic,
+        }
+      );
 
-        onSuccess();
+      setSuccessMessage("Evento registrado com sucesso!");
+      setEventName("");
+      setDescription("");
+      setStartTime("");
+      setEndTime("");
+      setIsPublic(false);
 
-        setTimeout(() => {
-            setSuccessMessage(null);
-            onClose();
-        }, 500);
+      onSuccess();
+
+      setTimeout(() => {
+        setSuccessMessage(null);
+        onClose();
+      }, 500);
     } catch (error) {
-        console.error("Erro ao registrar evento:", error);
-        setError("Erro ao registrar o evento. Tente novamente.");
+      console.error("Erro ao registrar evento:", error);
+      setError("Erro ao registrar o evento. Tente novamente.");
     }
-};
+  };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className={`modal-overlay ${isVisible ? 'visible' : ''}`}>
+      <div className={`modal-content ${isVisible ? 'visible' : ''}`}>
         <button className="close-button" onClick={onClose}>×</button>
         <h2>Adicionar Novo Evento</h2>
         <form>

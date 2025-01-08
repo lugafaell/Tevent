@@ -3,7 +3,14 @@ import './EventDetailsModal.css';
 import { Calendar, Clock, Users, Trash2, Edit, LogOut } from 'lucide-react';
 import EditEventModal from '../EditEventModal/EditEventModal';
 import { Event, EventDetailsModalProps } from '../../types/event';
+import CustomAlert from '../CustomAlert/CustomAlert';
 import axios from 'axios';
+
+type AlertConfig = {
+    show: boolean;
+    message: string;
+    type: 'info' | 'success' | 'warn' | 'error';
+};
 
 const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
     isOpen,
@@ -13,8 +20,9 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
     onEventUpdate,
 }) => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [alert, setAlert] = useState<AlertConfig | null>(null);
     const [selectedUser, setSelectedUser] = useState('');
+    const [isVisible, setIsVisible] = useState(false);
     const [invitedUsers, setInvitedUsers] = useState<string[]>(
         event.guests ? event.guests.map(String) : []
     );
@@ -28,28 +36,38 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
 
     useEffect(() => {
         if (isOpen) {
-            const fetchAvailableUsers = async () => {
-                try {
-                    const response = await axios.get(
-                        `http://localhost:3000/api/eventos/${event.id}/usuarios-disponiveis/${userId}`
-                    );
-                    setAvailableUsers(response.data);
-                } catch (error) {
-                    console.error('Erro ao buscar usuários disponíveis:', error);
-                    setError('Erro ao carregar usuários disponíveis.');
-                    setTimeout(() => setError(null), 3000);
-                }
-            };
+            setIsVisible(true);
             fetchAvailableUsers();
+        } else {
+            setIsVisible(false);
         }
-    }, [isOpen, event.id, userId]);
+    }, [isOpen]);
+
+    const fetchAvailableUsers = async () => {
+        try {
+            const response = await axios.get(
+                `http://localhost:3000/api/eventos/${event.id}/usuarios-disponiveis/${userId}`
+            );
+            setAvailableUsers(response.data);
+        } catch (error) {
+            console.error('Erro ao buscar usuários disponíveis:', error);
+            setAlert({
+                show: true,
+                message: 'Erro ao carregar usuários disponíveis.',
+                type: 'error'
+            });
+        }
+    };
 
     const handleSendInvite = async () => {
         const selectedUserId = availableUsers.find(user => user.nome === selectedUser)?.id;
 
         if (!selectedUserId) {
-            setError('Selecione um usuário válido para enviar o convite.');
-            setTimeout(() => setError(null), 3000);
+            setAlert({
+                show: true,
+                message: 'Selecione um usuário válido para enviar o convite.',
+                type: 'warn'
+            });
             return;
         }
 
@@ -62,14 +80,21 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
         try {
             const response = await axios.post('http://localhost:3000/api/enviar', inviteData);
             if (response.status === 200) {
-                alert('Convite enviado com sucesso!');
+                setAlert({
+                    show: true,
+                    message: 'Convite enviado com sucesso!',
+                    type: 'success'
+                });
                 setInvitedUsers([...invitedUsers, selectedUser]);
                 setSelectedUser('');
             }
         } catch (error) {
             console.error('Erro ao enviar convite:', error);
-            setError('Erro ao enviar convite. Tente novamente.');
-            setTimeout(() => setError(null), 3000);
+            setAlert({
+                show: true,
+                message: 'Erro ao enviar convite. Tente novamente.',
+                type: 'error'
+            });
         }
     };
 
@@ -88,14 +113,16 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
             );
 
             if (response.status === 200) {
-                alert('Evento deletado com sucesso.');
                 onDelete();
                 onClose();
             }
         } catch (error) {
             console.error('Erro ao deletar evento:', error);
-            setError('Erro ao deletar evento. Tente novamente.');
-            setTimeout(() => setError(null), 3000);
+            setAlert({
+                show: true,
+                message: 'Erro ao deletar evento. Tente novamente.',
+                type: 'error'
+            });
         }
     };
 
@@ -107,13 +134,21 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
             );
 
             if (response.status === 200) {
-                alert('Você não está mais participando deste evento.');
+                setAlert({
+                    show: true,
+                    message: 'Você não está mais participando deste evento.',
+                    type: 'success'
+                });
                 onClose();
+                onDelete();
             }
         } catch (error) {
             console.error('Erro ao remover participação:', error);
-            setError('Erro ao remover participação. Tente novamente.');
-            setTimeout(() => setError(null), 3000);
+            setAlert({
+                show: true,
+                message: 'Erro ao remover participação. Tente novamente.',
+                type: 'error'
+            });
         }
     };
 
@@ -137,24 +172,38 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
             if (response.status === 200) {
                 onEventUpdate(response.data);
                 setIsEditModalOpen(false);
+                setAlert({
+                    show: true,
+                    message: 'Evento atualizado com sucesso!',
+                    type: 'success'
+                });
             }
         } catch (error) {
             console.error('Erro ao atualizar evento:', error);
-            setError('Erro ao atualizar evento. Tente novamente.');
-            setTimeout(() => setError(null), 3000);
+            setAlert({
+                show: true,
+                message: 'Erro ao atualizar evento. Tente novamente.',
+                type: 'error'
+            });
         }
     };
 
-    if (!isOpen) return null;
+    if (!isOpen && !isVisible) return null;
 
     const isOwner = event.usuarioId === userId;
     const isParticipant = event.guests?.includes(userId);
 
     return (
         <>
-            <div className="modal-overlay">
-                <div className="modal-content">
-                    {error && <div className="error-message-details">{error}</div>}
+            <div className={`modal-overlay ${isVisible ? 'visible' : ''}`}>
+                <div className={`modal-content ${isVisible ? 'visible' : ''}`}>
+                    {alert?.show && (
+                        <CustomAlert
+                            message={alert.message}
+                            type={alert.type}
+                            onClose={() => setAlert(null)}
+                        />
+                    )}
                     <div className="modal-header">
                         <h2>{event.nome}</h2>
                         <button className="close-button" onClick={onClose}>

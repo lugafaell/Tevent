@@ -6,11 +6,14 @@
 }
 
 .calendar-header {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+    padding: 16px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 24px;
-    height: 80px;
 }
 
 .header-left {
@@ -35,12 +38,17 @@
     gap: 16px;
 }
 
+.nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .current-date {
     font-size: 18px;
     font-weight: 500;
     color: #4a5568;
-    min-width: 200px;
-    text-align: center;
+    margin: 0 8px;
 }
 
 .nav-button {
@@ -63,4 +71,21 @@
 
 .nav-button:active {
     background-color: #edf2f7;
+}
+
+@media screen and (max-width: 480px) {
+    .calendar-header {
+        padding: 8px 12px;
+        height: auto;
+        min-height: 60px;
+        margin-top: 50px;
+    }
+
+    .header-left h1 {
+        font-size: 20px;
+    }
+
+    .current-date {
+        font-size: 16px;
+    }
 }

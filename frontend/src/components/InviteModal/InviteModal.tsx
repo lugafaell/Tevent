@@ -10,6 +10,7 @@ const InviteModal: React.FC<InviteModalProps> = ({ isOpen, onClose }) => {
   const [usuarios, setUsuarios] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   const userId = Cookies.get('userId');
 
@@ -80,14 +81,17 @@ const InviteModal: React.FC<InviteModalProps> = ({ isOpen, onClose }) => {
     if (isOpen) {
       fetchConvites();
       fetchUsuarios();
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
     }
   }, [isOpen, userId]);
 
-  if (!isOpen) return null;
+  if (!isOpen && !isVisible) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className={`modal-overlay ${isVisible ? 'visible' : ''}`}>
+      <div className={`modal-content ${isVisible ? 'visible' : ''}`}>
         <button className="close-button" onClick={onClose}>
           <AiOutlineClose size={20} />
         </button>

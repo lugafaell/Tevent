@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
-import { CalendarIcon, GearIcon, EnvelopeClosedIcon, ExitIcon } from '@radix-ui/react-icons';
+import { CalendarIcon, PersonIcon, EnvelopeClosedIcon, ExitIcon } from '@radix-ui/react-icons';
+import { Menu } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import LogoImage from '../../assets/imagem_2024-12-18_143117374-Photoroom.png';
@@ -9,7 +10,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 
 interface SidebarProps {
-  onNavigate: (component: 'calendar' | 'events') => void;
+  onNavigate: (component: 'calendar' | 'events' | 'settings') => void;
   activeComponent: string;
 }
 
@@ -18,6 +19,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeComponent }) => {
   const { logout } = useAuth();
   const [isModalOpen, setModalOpen] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -30,7 +32,6 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeComponent }) => {
         setUserName(response.data.nome);
       } catch (error) {
         console.error('Erro ao buscar usuário:', error);
-        // Se necessário, faça logout automático
         logout();
         navigate('/', { replace: true });
       }
@@ -42,51 +43,86 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, activeComponent }) => {
   const handleLogout = () => {
     logout();
     navigate('/', { replace: true });
+    Cookies.remove('activeComponent');
   };
 
   const handleInviteClick = () => {
     setModalOpen(true);
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleNavigation = (component: 'calendar' | 'events' | 'settings') => {
+    onNavigate(component);
+    setIsMobileMenuOpen(false);
   };
 
   return (
-    <div className="sidebar">
-      <div className="sidebar-header">
-        <img src={LogoImage} alt="Logo" className="sidebar-logo" />
-        <p className="sidebar-brand">Tevent</p>
-      </div>
-      <ul className="sidebar-menu">
-        <li
-          className={`menu-item ${activeComponent === 'calendar' ? 'active' : ''}`}
-          onClick={() => onNavigate('calendar')}
-        >
-          <CalendarIcon className="menu-icon" />
-          <span>Meus Eventos</span>
-        </li>
-        <li
-          className={`menu-item ${activeComponent === 'events' ? 'active' : ''}`}
-          onClick={() => onNavigate('events')}
-        >
-          <CalendarIcon className="menu-icon" />
-          <span>Participar de Eventos</span>
-        </li>
-        <li className="menu-item" onClick={handleInviteClick}>
-          <EnvelopeClosedIcon className="menu-icon" />
-          <span>Convites</span>
-        </li>
-        <li className="menu-item">
-          <GearIcon className="menu-icon" />
-          <span>Configurações</span>
-        </li>
-      </ul>
-      <div className="sidebar-footer">
-        <span className="sidebar-user">Olá, {userName || 'Carregando...'}</span>
-        <button className="logout-button" onClick={handleLogout}>
-          <ExitIcon className="menu-icon" />
-        </button>
-      </div>
+    <>
 
       <InviteModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
-    </div>
+      <div className="mobile-navbar">
+        <div className="mobile-navbar-content">
+          <div className="mobile-logo">
+            <img src={LogoImage} alt="Logo" className="mobile-logo-img" />
+            <span className="mobile-brand">Tevent</span>
+          </div>
+          <button 
+            className="mobile-menu-button"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <Menu size={24} color="white" />
+          </button>
+        </div>
+      </div>
+
+      <div className={`sidebar ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`}>
+        <div className="sidebar-header desktop-only">
+          <img src={LogoImage} alt="Logo" className="sidebar-logo" />
+          <p className="sidebar-brand">Tevent</p>
+        </div>
+        <ul className="sidebar-menu">
+          <li
+            className={`menu-item ${activeComponent === 'calendar' ? 'active' : ''}`}
+            onClick={() => handleNavigation('calendar')}
+          >
+            <CalendarIcon className="menu-icon" />
+            <span>Meus Eventos</span>
+          </li>
+          <li
+            className={`menu-item ${activeComponent === 'events' ? 'active' : ''}`}
+            onClick={() => handleNavigation('events')}
+          >
+            <CalendarIcon className="menu-icon" />
+            <span>Participar de Eventos</span>
+          </li>
+          <li className="menu-item" onClick={handleInviteClick}>
+            <EnvelopeClosedIcon className="menu-icon" />
+            <span>Convites</span>
+          </li>
+          <li
+            className={`menu-item ${activeComponent === 'settings' ? 'active' : ''}`}
+            onClick={() => handleNavigation('settings')}
+          >
+            <PersonIcon className="menu-icon" />
+            <span>Perfil</span>
+          </li>
+        </ul>
+        <div className="sidebar-footer">
+          <span className="sidebar-user">Olá, {userName || 'Carregando...'}</span>
+          <button className="logout-button" onClick={handleLogout}>
+            <ExitIcon className="menu-icon" />
+          </button>
+        </div>
+
+      </div>
+
+      {isMobileMenuOpen && (
+        <div 
+          className="mobile-overlay"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+    </>
   );
 };
 

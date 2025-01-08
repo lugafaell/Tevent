@@ -89,7 +89,6 @@
     background-color: #523775;
   }
   
-  /* Media Queries para melhor responsividade */
   @media screen and (max-width: 768px) {
     .event-list-container-new {
       padding: 1rem;
@@ -108,5 +107,6 @@
     .event-list-title-new {
       font-size: 1.5rem;
       margin-bottom: 1.5rem;
+      margin-top: 4rem;
     }
   }
